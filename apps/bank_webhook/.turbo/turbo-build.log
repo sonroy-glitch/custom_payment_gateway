@@ -1,0 +1,18 @@
+
+
+> bank_webhook@1.0.0 build
+> tsc -b
+
+[1G[0K[91merror[0m[90m TS5055: [0mCannot write file '/home/sr/Documents/Programming/PAYTM/paytm/apps/bank_webhook/dist/index.d.ts' because it would overwrite input file.
+
+
+Found 1 error.
+
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m Lifecycle script `build` failed with error:
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcode[39m [33m1[39m
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mpath[39m /home/sr/Documents/Programming/PAYTM/paytm/apps/bank_webhook
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mworkspace[39m bank_webhook@1.0.0
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mlocation[39m /home/sr/Documents/Programming/PAYTM/paytm/apps/bank_webhook
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m command failed
+[1G[0K⠙[1G[0K[1mnpm[22m [31merror[39m [94mcommand[39m sh -c tsc -b
+[1G[0K⠙[1G[0K
