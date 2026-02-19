@@ -116,5 +116,5 @@ Docker deployment
 
 ## Author
 
-Built by <Your Name>
+Built by Sounak Roy
 Created to understand real payment infrastructure beyond basic integrations.
