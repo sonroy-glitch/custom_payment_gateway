@@ -1,81 +1,120 @@
-# Turborepo starter
+# Custom Payment Gateway – Turborepo Monorepo
 
-This is an official starter Turborepo.
+A full-stack custom payment gateway system built using a Turborepo monorepo architecture.
 
-## Using this example
+This project simulates how real-world payment systems work by introducing an intermediate payment gateway between the merchant and the bank. The focus is on transaction reliability, webhook verification, idempotency, and clean separation of responsibilities.
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
-```
+## Overview
 
-## What's inside?
+Instead of directly integrating a bank/payment provider inside the merchant backend, this system introduces a gateway layer that:
 
-This Turborepo includes the following packages/apps:
+* Verifies bank webhooks
+* Normalizes payment statuses
+* Prevents duplicate transactions
+* Maintains a secure source of truth
+* Decouples merchant logic from bank logic
 
-### Apps and Packages
+This mimics how providers like Stripe or Razorpay function internally.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+---
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Architecture
 
-### Utilities
+User → Web App → Merchant Service → Payment Gateway → Bank
+                      ↓
+                    Bank Webhook
+                      ↓
+                Gateway Verification
+                      ↓
+                Merchant Update
+                      ↓
+                UI Status Update
 
-This Turborepo has some additional tools already setup for you:
+Core principle: the frontend never decides payment success — only verified gateway events update order state.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+---
 
-### Build
+## Monorepo Structure
 
-To build all apps and packages, run the following command:
+apps/
+ bank_webhook → Payment Gateway service (handles verification)
+ bank_webhook_fe → Gateway UI / debugging interface
+ merchant → Merchant backend (creates orders)
+ user → User/account management service
+ web → Main checkout frontend
 
-```
-cd my-turborepo
-pnpm build
-```
+packages/
+ shared → Shared types & utilities
 
-### Develop
+turbo.json → Turborepo pipeline
+package.json → Workspace configuration
 
-To develop all apps and packages, run the following command:
+---
 
-```
-cd my-turborepo
-pnpm dev
-```
+## Payment Flow
 
-### Remote Caching
+1. User clicks Pay → merchant creates order → CREATED
+2. Merchant asks gateway to initiate payment → PENDING
+3. User interacts with bank simulator
+4. Bank sends webhook to gateway
+5. Gateway verifies signature and transaction
+6. Merchant updated → SUCCESS / FAILED
+7. Frontend fetches final state
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+---
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+## Key Concepts Implemented
 
-```
-cd my-turborepo
-npx turbo login
-```
+* Idempotency (no double charges)
+* Webhook signature verification
+* Payment state machine
+* Async confirmation handling
+* Service decoupling
+* Transaction auditing
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+---
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## Tech Stack
 
-```
-npx turbo link
-```
+Node.js services
+Next.js / React frontend
+REST APIs
+Turborepo monorepo
 
-## Useful Links
+---
 
-Learn more about the power of Turborepo:
+## Getting Started
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Install dependencies:
+npm install
+
+Run all services:
+npm run dev
+
+---
+
+## Why This Exists
+
+Most payment tutorials assume success immediately after checkout.
+Real systems must handle retries, fake responses, delayed confirmation, and consistency across services.
+
+This project focuses on those reliability problems rather than UI.
+
+---
+
+## Future Improvements
+
+Multi-provider routing
+Retry queues
+Refund support
+Admin dashboard
+Docker deployment
+
+---
+
+## Author
+
+Built by <Your Name>
+Created to understand real payment infrastructure beyond basic integrations.
